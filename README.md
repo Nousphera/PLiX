@@ -26,7 +26,8 @@ cd PLiX
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install plixkws==1.0 torch==2.14.1 torchvision==0.29.1   torchaudio==2.11.0 timm==1.0.30 numpy==1.26.4 librosa==0.11.0
+python -m pip install plixkws==1.0 torch==2.14.1 torchvision==0.29.1 \
+  torchaudio==2.11.0 timm==1.0.30 numpy==1.26.4 librosa==0.11.0
 python -m pip check
 ```
 
@@ -41,9 +42,11 @@ from the authors’ pinned Hugging Face revision into its expected cache:
 
 ```bash
 mkdir -p models
-curl --fail --location   https://huggingface.co/aaqibsaeed/plixkws/resolve/80e18934275fc14ced9cde742949c00c5928be26/config.json \
+curl --fail --location \
+  https://huggingface.co/aaqibsaeed/plixkws/resolve/80e18934275fc14ced9cde742949c00c5928be26/config.json \
   --output models/config.json
-curl --fail --location   https://huggingface.co/aaqibsaeed/plixkws/resolve/80e18934275fc14ced9cde742949c00c5928be26/base_multi_model.pt \
+curl --fail --location \
+  https://huggingface.co/aaqibsaeed/plixkws/resolve/80e18934275fc14ced9cde742949c00c5928be26/base_multi_model.pt \
   --output models/base_multi_model.pt
 python - <<'PY_CHECK'
 from hashlib import sha256
