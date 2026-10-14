@@ -1,8 +1,21 @@
 cff-version: 1.2.0
 message: "Please cite the associated research paper."
+type: software
 title: "Plug-and-Play Multilingual Few-shot Spoken Words Recognition"
-type: article
 authors:
-  - name: "Aaqib Saeed"
-  - name: "Vasileios Tsouvalas"
-url: https://arxiv.org/abs/2305.03058
+  - family-names: "Saeed"
+    given-names: "Aaqib"
+  - family-names: "Tsouvalas"
+    given-names: "Vasileios"
+repository-code: https://github.com/Nousphera/PLiX
+url: https://nousphera.github.io/PLiX/
+preferred-citation:
+  type: article
+  title: "Plug-and-Play Multilingual Few-shot Spoken Words Recognition"
+  authors:
+    - family-names: "Saeed"
+      given-names: "Aaqib"
+    - family-names: "Tsouvalas"
+      given-names: "Vasileios"
+  year: 2023
+  url: https://arxiv.org/abs/2305.03058
