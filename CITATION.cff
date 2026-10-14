@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Please cite the associated research paper."
+title: "Plug-and-Play Multilingual Few-shot Spoken Words Recognition"
+type: article
+authors:
+  - name: "Aaqib Saeed"
+  - name: "Vasileios Tsouvalas"
+url: https://arxiv.org/abs/2305.03058
