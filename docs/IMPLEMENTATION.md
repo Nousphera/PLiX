@@ -22,10 +22,9 @@ Verified 2026-10-15:
 - The package and HF model card declare Apache-2.0. Those upstream declarations
   do not change publication or dataset terms.
 
-No model weights or user recordings were downloaded. Package installation,
-full inference, recognition accuracy, quantized deployment and current-library
-compatibility were not independently validated by this documentation update.
-The README example was checked against the wheel API and Python syntax only.
+The multilingual base weights were downloaded from that pinned HF revision and loaded successfully. SHA-256: `ed7298544e7fa5e5966ce193ba2519b12714311231c15313a7e096632fa9ac80`. The checkpoint contains only tensor state entries; the model has 52,857,924 parameters.
+
+A fresh Python 3.11.15 environment on macOS arm64 used torch2.5.1, torchvision0.20.1, torchaudio2.5.1, timm1.0.15, NumPy1.26.4 and librosa0.11.0. Installation and `pip check` passed. Three generated 16kHz WAVs passed through the documented `load_clip` and model API, producing one valid class index from two support classes. No user recordings were used. This is an end-to-end API compatibility check, not a spoken-word accuracy experiment. Linux/CUDA, quantized deployment and full episodic benchmark accuracy remain unverified.
 
 For a reproducible inference experiment, record the package version, HF revision,
 chosen encoder/language, model-file checksum, resolved dependency versions,

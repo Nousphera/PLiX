@@ -16,11 +16,11 @@ The authors’ **pretrained models and inference instructions are released on [H
 ## Use the released package
 
 The inference package is [plixkws 1.0 on PyPI](https://pypi.org/project/plixkws/).
-Use a dedicated Python environment and install the PyTorch/torchaudio versions
-appropriate for your platform, then:
+Use a dedicated Python 3.11 environment. This combination was validated on macOS arm64 CPU:
 
 ```bash
-python -m pip install plixkws==1.0
+python -m pip install plixkws==1.0 torch==2.5.1 torchvision==0.20.1 \
+  torchaudio==2.5.1 timm==1.0.15 numpy==1.26.4 librosa==0.11.0
 ```
 
 The package exposes `plixkws.model.load` and `plixkws.util.load_clip`.
@@ -69,11 +69,8 @@ and predicts the nearest prototype by squared Euclidean distance. It returns
 class indices, not calibrated rejection probabilities. Closed-set clip
 recognition does not establish continuous-listening false-trigger performance.
 
-The package metadata and wheel API were inspected on 2026-10-15; the published
-weights were not downloaded or independently evaluated in this documentation
-update. The package does not pin its PyTorch, torchaudio, timm or librosa
-versions, so record your resolved environment before comparing results.
-[Validation and provenance](docs/IMPLEMENTATION.md) lists the verified scope.
+The multilingual base checkpoint was loaded and the example completed on CPU with generated WAV files on 2026-10-15. This verifies decoding, model compatibility and inference, **not recognition accuracy**. The checkpoint SHA-256 is `ed7298544e7fa5e5966ce193ba2519b12714311231c15313a7e096632fa9ac80`.
+[Validation and provenance](docs/IMPLEMENTATION.md) records the exact scope.
 
 ## Method at a glance
 
