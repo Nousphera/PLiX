@@ -24,7 +24,22 @@ Verified 2026-10-15:
 
 The multilingual base weights were downloaded from that pinned HF revision and loaded successfully. SHA-256: `ed7298544e7fa5e5966ce193ba2519b12714311231c15313a7e096632fa9ac80`. The checkpoint contains only tensor state entries; the model has 52,857,924 parameters.
 
-A fresh Python 3.11.15 environment on macOS arm64 used torch2.5.1, torchvision0.20.1, torchaudio2.5.1, timm1.0.15, NumPy1.26.4 and librosa0.11.0. Installation and `pip check` passed. Three generated 16kHz WAVs passed through the documented `load_clip` and model API, producing one valid class index from two support classes. No user recordings were used. This is an end-to-end API compatibility check, not a spoken-word accuracy experiment. Linux/CUDA, quantized deployment and full episodic benchmark accuracy remain unverified.
+A fresh Python 3.11.15 environment on macOS arm64 used PyTorch 2.14.1, torchvision 0.29.1, torchaudio 2.11.0, timm 1.0.30, NumPy 1.26.4 and librosa 0.11.0. Installation and `pip check` passed. Three generated 16kHz WAVs passed through the documented `load_clip` and model API, producing one valid class index from two support classes. No user recordings were used. This is an end-to-end API compatibility check, not a spoken-word accuracy experiment. Linux/CUDA, quantized deployment and full episodic benchmark accuracy remain unverified.
+
+The current-stack check verified the checkpoint checksum, loaded its 1,120 tensor
+state entries with `weights_only=True`, then used the package's unchanged loader
+and inference API. The support tensor was `(2, 1, 16000)` and the query tensor was
+`(1, 1, 16000)`; the returned class-index tensor was `(1,)`. The 52,857,924-parameter
+model loaded without missing/unexpected state keys. Dependencies are recorded in
+[`requirements-tested-macos-py311.txt`](../requirements-tested-macos-py311.txt).
+The torch/torchaudio version numbers differ; the evidence applies to this tested
+macOS CPU path and does not establish Linux/CUDA extension compatibility.
+
+The maintained PyTorch pin is outside the affected range of
+[GHSA-53q9-r3pm-6pq6](https://github.com/advisories/GHSA-53q9-r3pm-6pq6)
+(fixed in 2.6.0). Package 1.0's loader relies on PyTorch's default checkpoint
+loading behavior; no `weights_only=False` workaround or package-code patch was
+needed for these released weights.
 
 For a reproducible inference experiment, record the package version, HF revision,
 chosen encoder/language, model-file checksum, resolved dependency versions,

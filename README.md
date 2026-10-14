@@ -19,9 +19,16 @@ The inference package is [plixkws 1.0 on PyPI](https://pypi.org/project/plixkws/
 Use a dedicated Python 3.11 environment. This combination was validated on macOS arm64 CPU:
 
 ```bash
-python -m pip install plixkws==1.0 torch==2.5.1 torchvision==0.20.1 \
-  torchaudio==2.5.1 timm==1.0.15 numpy==1.26.4 librosa==0.11.0
+python -m pip install plixkws==1.0 torch==2.14.1 torchvision==0.29.1 \
+  torchaudio==2.11.0 timm==1.0.30 numpy==1.26.4 librosa==0.11.0
 ```
+
+The [resolved environment](requirements-tested-macos-py311.txt) records all
+installed packages. This exact torch/torchaudio combination passed the released
+multilingual model's loading and inference path on macOS arm64; it is not a claim
+of binary compatibility for other platforms. The maintained instructions require
+PyTorch 2.6 or newer because earlier versions are affected by
+[GHSA-53q9-r3pm-6pq6](https://github.com/advisories/GHSA-53q9-r3pm-6pq6).
 
 The package exposes `plixkws.model.load` and `plixkws.util.load_clip`.
 For the multilingual base, choose `encoder_name="base", language="multi"`;
