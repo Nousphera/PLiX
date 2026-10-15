@@ -1,53 +1,66 @@
-# Implementation entry points and verification
+# Inference guide
 
-The release boundary is the author-maintained `plixkws` Python package and
-Hugging Face model repository. This repository hosts documentation, project
-materials and citation. It intentionally contains no duplicate implementation.
+PLiX inference is provided by the authors' [plixkws package](https://pypi.org/project/plixkws/)
+and [Hugging Face models](https://huggingface.co/aaqibsaeed/plixkws).
+This repository contains installation instructions, research materials and citation.
 
-Verified 2026-10-15:
+## Package and models
 
-- [PyPI package](https://pypi.org/project/plixkws/): version 1.0, released
-  2023-05-08; wheel SHA-256
-  `958f42ca5975627cc955f52e39d96d58a2d2b53de83a77b7fd45640cc5d65738`.
-- [Hugging Face models](https://huggingface.co/aaqibsaeed/plixkws/tree/80e18934275fc14ced9cde742949c00c5928be26):
-  immutable revision `80e18934275fc14ced9cde742949c00c5928be26` contains
-  `config.json`, `base_multi_model.pt`, `base_en_model.pt` and small-model files.
-- The wheel's `model.py`, `util.py`, `backbone.py` and `protonet.py` were read.
-  README calls match those APIs. Cache-prefetch instructions avoid dependence
-  on the package's historical Dropbox download URLs.
-- The historical `FewshotML/plix` GitHub homepage and `test_model.py` links from
-  the upstream metadata/model card return 404. They are not valid installation
-  entry points; use PyPI and Hugging Face above. This repository cannot repair
-  links in another publisher's package metadata or model card.
-- The package and HF model card declare Apache-2.0. Those upstream declarations
-  do not change publication or dataset terms.
+| Resource | Version or identifier |
+|---|---|
+| Python package | `plixkws==1.0` |
+| Model revision | `80e18934275fc14ced9cde742949c00c5928be26` |
+| Multilingual base file | `base_multi_model.pt` |
+| Base model SHA-256 | `ed7298544e7fa5e5966ce193ba2519b12714311231c15313a7e096632fa9ac80` |
+| Base model parameters | 52,857,924 |
 
-The multilingual base weights were downloaded from that pinned HF revision and loaded successfully. SHA-256: `ed7298544e7fa5e5966ce193ba2519b12714311231c15313a7e096632fa9ac80`. The checkpoint contains only tensor state entries; the model has 52,857,924 parameters.
+The [pinned model repository](https://huggingface.co/aaqibsaeed/plixkws/tree/80e18934275fc14ced9cde742949c00c5928be26)
+contains `config.json`, multilingual and English base checkpoints, and separate
+language-specific small models. Follow the [README download commands](../README.md#models-and-input-audio)
+to populate the package cache from Hugging Face before calling `model.load`.
 
-A fresh Python 3.11.15 environment on macOS arm64 used PyTorch 2.14.1, torchvision 0.29.1, torchaudio 2.11.0, timm 1.0.30, NumPy 1.26.4 and librosa 0.11.0. Installation and `pip check` passed. Three generated 16kHz WAVs passed through the documented `load_clip` and model API, producing one valid class index from two support classes. No user recordings were used. This is an end-to-end API compatibility check, not a spoken-word accuracy experiment. Linux/CUDA, quantized deployment and full episodic benchmark accuracy remain unverified.
+Use `encoder_name="base", language="multi"` for multilingual inference.
+`language="en"` selects a separate English checkpoint. Small models also use
+separate language-specific weights; choose a checkpoint matching both options.
 
-The current-stack check verified the checkpoint checksum, loaded its 1,120 tensor
-state entries with `weights_only=True`, then used the package's unchanged loader
-and inference API. The support tensor was `(2, 1, 16000)` and the query tensor was
-`(1, 1, 16000)`; the returned class-index tensor was `(1,)`. The 52,857,924-parameter
-model loaded without missing/unexpected state keys. Dependencies are recorded in
-[`requirements-tested-macos-py311.txt`](../requirements-tested-macos-py311.txt).
-The torch/torchaudio version numbers differ; the evidence applies to this tested
-macOS CPU path and does not establish Linux/CUDA extension compatibility.
+## Audio and support sets
 
-The maintained PyTorch pin is outside the affected range of
-[GHSA-53q9-r3pm-6pq6](https://github.com/advisories/GHSA-53q9-r3pm-6pq6)
-(fixed in 2.6.0). Package 1.0's loader relies on PyTorch's default checkpoint
-loading behavior; no `weights_only=False` workaround or package-code patch was
-needed for these released weights.
+`util.load_clip(path)` averages channels, resamples to 16 kHz and pads or trims
+to one second. The output shape is `(1,16000)`. Segment and center one spoken
+word in each WAV before loading it. Long-recording segmentation is a separate
+preprocessing step.
 
-For a reproducible inference experiment, record the package version, HF revision,
-chosen encoder/language, model-file checksum, resolved dependency versions,
-support/query clip IDs, class order, number of examples per class and any episode
-sampling seed. Keep query clips separate from support. The supplied package
-requires equal support counts because it stacks per-class embedding tensors.
+A support set contains audio, integer labels and ordered class names. Supply
+the same positive number of examples for every class: the package stacks
+per-class embedding tensors to form prototypes. Label indices must match the
+class-name order. Keep query clips separate from the support set.
 
-The paper's keyword-disjoint training/test vocabulary and episodic benchmark
-are separate from a small local inference example. Language-specific small
-models and the multilingual base are separate trained artifacts. No original
-training pipeline is claimed by this documentation-only repository.
+For two classes with one support example each, the support tensor has shape
+`(2,1,16000)` and a single-query tensor has shape `(1,1,16000)`. The recognizer
+returns a `(1,)` tensor of class indices. Map each index back to the same class
+list used for support.
+
+The encoder stays fixed. Class prototypes average support embeddings, and
+queries are assigned to the nearest prototype by squared Euclidean distance.
+Changing the support set changes the vocabulary. Predictions are closed-set
+choices among supplied classes; continuous detection and unknown-word rejection
+need separate application logic.
+
+## Environment and experiment records
+
+[`requirements-tested-macos-py311.txt`](../requirements-tested-macos-py311.txt)
+records the Python 3.11/macOS arm64 CPU dependency set used for checkpoint loading
+and inference. On other platforms, choose compatible PyTorch, torchvision and
+torchaudio builds for the intended CPU/CUDA runtime. Package 1.0 uses PyTorch's
+default checkpoint loader; the supplied base checkpoint contains tensor state
+entries and works with the documented PyTorch pin.
+
+Record package versions, model revision, encoder/language, checkpoint checksum,
+class order, support/query clip IDs, examples per class and episode sampling
+seed. For episodic evaluation, keep training and test vocabularies disjoint and
+report the vocabulary size, support count and query count.
+
+## Licensing
+
+The package and Hugging Face model card declare Apache-2.0. Follow those artifact
+terms and the separate terms for any publications, recordings or datasets used.

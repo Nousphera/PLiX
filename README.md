@@ -4,13 +4,13 @@
 
 Aaqib Saeed · Vasileios Tsouvalas · arXiv:2305.03058 2023
 
-[Paper](https://arxiv.org/abs/2305.03058) · [Project](https://nousphera.github.io/PLiX/) · [Poster](https://nousphera.github.io/PLiX/poster.pdf)
+[<img src="docs/assets/icons/paper.svg" width="16" height="16" alt=""> Paper](https://arxiv.org/abs/2305.03058) · [<img src="docs/assets/icons/project.svg" width="16" height="16" alt=""> Project](https://nousphera.github.io/PLiX/) · [Poster](https://nousphera.github.io/PLiX/poster.pdf)
 
 ## Abstract
 
 As technology advances and digital devices become prevalent, seamless human-machine communication is increasingly gaining significance. The growing adoption of mobile, wearable, and other Internet of Things (IoT) devices has changed how we interact with these smart devices, making accurate spoken words recognition a crucial component for effective interaction. However, building robust spoken words detection system that can handle novel keywords remains challenging, especially for low-resource languages with limited training data. Here, we propose PLiX, a multilingual and plug-and-play keyword spotting system that leverages few-shot learning to harness massive real-world data and enable the recognition of unseen spoken words at test-time. Our few-shot deep models are learned with millions of one-second audio clips across 20 languages, achieving state-of-the-art performance while being highly efficient. Extensive evaluations show that PLiX can generalize to novel spoken words given as few as just one support example and performs well on unseen languages out of the box. We release models and inference code to serve as a foundation for future research and voice-enabled user interface development for emerging devices.
 
-## Setup
+## Install
 
 The released inference implementation is the authors’
 [plixkws package](https://pypi.org/project/plixkws/) and
@@ -32,13 +32,13 @@ python -m pip check
 ```
 
 [The complete tested environment](requirements-tested-macos-py311.txt) records
-the remaining versions. Other platforms need compatible PyTorch wheels; this
-macOS test does not verify Linux/CUDA binary compatibility.
+the remaining versions. On other platforms, install mutually compatible
+PyTorch, torchvision and torchaudio wheels for your CPU or CUDA environment.
 
 ## Models and input audio
 
-Package 1.0 uses historical Dropbox URLs. Prefetch the multilingual base model
-from the authors’ pinned Hugging Face revision into its expected cache:
+Download the multilingual base model from the authors’ pinned Hugging Face
+revision into the package’s model cache:
 
 ```bash
 mkdir -p models
@@ -64,8 +64,8 @@ one second with the word centered. `load_clip` averages channels, resamples to
 16 kHz and pads/trims to one second. It does not find a keyword in a long recording.
 
 For a larger vocabulary, provide the same positive number of support clips for
-every class. Keep query recordings out of support. No benchmark dataset download
-or training pipeline is required for this local inference example.
+every class. Keep query recordings out of support. This inference example uses
+your recordings and the pretrained encoder.
 
 ## Run
 
@@ -95,13 +95,13 @@ are closed-set class indices, not calibrated rejection probabilities. Use
 `language="en"` only with the separate English model; small models are also
 separate language-specific artifacts.
 
-## Reproducibility
+## Configuration and outputs
 
-Record the package/dependency versions, HF revision, checkpoint checksum, class
-order and support/query clip IDs. Generated-WAV decoding, multilingual checkpoint
-loading and CPU inference were verified; spoken-word accuracy, episodic paper
-benchmarks and continuous-listening performance were not measured.
-[Validation and upstream limitations](docs/IMPLEMENTATION.md) give the evidence.
+Select the encoder and language when loading a model; keep class names in the
+same order as the support labels. Record the package/dependency versions, model
+revision, checkpoint checksum and support/query clip IDs with each experiment.
+The [inference guide](docs/IMPLEMENTATION.md) details model selection, input
+shapes and support-set requirements.
 
 ## Citation
 
