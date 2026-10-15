@@ -16,7 +16,7 @@ This repository contains installation instructions, research materials and citat
 
 The [pinned model repository](https://huggingface.co/aaqibsaeed/plixkws/tree/80e18934275fc14ced9cde742949c00c5928be26)
 contains `config.json`, multilingual and English base checkpoints, and separate
-language-specific small models. Follow the [README download commands](../README.md#models-and-input-audio)
+language-specific small models. Follow the [README download commands](../README.md#pretrained-models)
 to populate the package cache from Hugging Face before calling `model.load`.
 
 Use `encoder_name="base", language="multi"` for multilingual inference.
