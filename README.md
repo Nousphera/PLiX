@@ -31,14 +31,13 @@ cd PLiX
 python3.11 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install plixkws==1.0 torch==2.14.1 torchvision==0.29.1 \
-  torchaudio==2.11.0 timm==1.0.30 numpy==1.26.4 librosa==0.11.0
+python -m pip install -r requirements.txt
 python -m pip check
 ```
 
-[The complete tested environment](requirements-tested-macos-py311.txt) records
-the remaining versions. On other platforms, install mutually compatible
-PyTorch, torchvision and torchaudio wheels for your CPU or CUDA environment.
+[requirements.txt](requirements.txt) installs the upstream package and its direct
+model/audio dependencies. Choose compatible CPU or CUDA builds of the listed
+PyTorch packages for your platform.
 
 ## Pretrained models
 

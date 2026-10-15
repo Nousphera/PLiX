@@ -48,9 +48,8 @@ need separate application logic.
 
 ## Environment and experiment records
 
-[`requirements-tested-macos-py311.txt`](../requirements-tested-macos-py311.txt)
-records the Python 3.11/macOS arm64 CPU dependency set used for checkpoint loading
-and inference. On other platforms, choose compatible PyTorch, torchvision and
+[`requirements.txt`](../requirements.txt) installs the upstream inference package
+and the direct model/audio dependencies used by the guide. On other platforms, choose compatible PyTorch, torchvision and
 torchaudio builds for the intended CPU/CUDA runtime. Package 1.0 uses PyTorch's
 default checkpoint loader; the supplied base checkpoint contains tensor state
 entries and works with the documented PyTorch pin.
